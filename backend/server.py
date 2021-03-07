@@ -1,4 +1,4 @@
-import os, time, datetime
+import os, time, datetime, socket
 import requests, json, secrets
 
 import spotipy
@@ -11,7 +11,7 @@ app.config['SECRET_KEY'] = secrets.token_urlsafe(16)
 socketio = SocketIO(app)
 
 # Flask params
-FLASK_HOST      = os.getenv('FLASK_HOST', default='127.0.0.1')
+FLASK_HOST      = os.getenv('FLASK_HOST', default='192.168.0.2')
 FLASK_PORT      = os.getenv('FLASK_PORT', default='5000')
 
 # Spotify client auth params
@@ -38,27 +38,30 @@ def home():
 # Starts spotify user authentication flow
 @app.route('/login')
 def login():
+    session['user'] = secrets.token_urlsafe(8)
     sp_oauth = SpotifyOAuth(client_id = CLIENT_ID,
                             client_secret = CLIENT_SECRET,
                             redirect_uri = REDIRECT_URI,
-                            scope = SCOPE)
+                            scope = SCOPE,
+                            username = session['user'])
 
     auth_url = sp_oauth.get_authorize_url()
 
     return redirect(auth_url)
 
-# Stores user authentication info for session
+# Stores user auth tokens for session
 @app.route('/auth_callback')
 def auth_callback():
     sp_oauth = SpotifyOAuth(client_id = CLIENT_ID,
                             client_secret = CLIENT_SECRET,
                             redirect_uri = REDIRECT_URI,
-                            scope = SCOPE)
+                            scope = SCOPE,
+                            username = session['user'])
 
-    session.clear()
     code = request.args.get('code')
     token_info = sp_oauth.get_access_token(code)
     session['token_info'] = token_info
+    #session.modified = True
 
     sp = spotipy.Spotify(auth=token_info['access_token'])
     user = sp.current_user()
@@ -71,24 +74,22 @@ def auth_callback():
 
     return response
 
-@socketio.on('track refresh')
-def test_message(message):
-    emit('my response', {'data': message['data']})
-
 # Queries Spotify Web API to get user's currently playing track info
 # Redirects to track-specific dashboard/chat room
-@app.route('/get_current_track_info', methods=['GET','POST'])
+@app.route('/get_current_track_info', methods=['GET'])
 def get_current_track_info():
+    '''
     session['token_info'], authorized = get_token(session)
-    session.modified = True
+    #session.modified = True
 
     if not authorized:
         return redirect('login')
+    '''
 
     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+    response = sp.current_user_playing_track()
 
     try:
-        response = sp.current_user_playing_track()
         # TODO: check if playing track (vs podcast, movie, etc)
         track_id = response['item']['id']
         track_name = response['item']['name']
@@ -104,7 +105,9 @@ def get_current_track_info():
                    'artwork': artwork,
                    'progress_ms': progress_ms,
                    'duration_ms': duration_ms}
-    except TypeError as e:
+
+    except Exception as e:
+        print(e)
         return redirect(url_for('error'))
 
     response = make_response(redirect(url_for('dashboard', track_id=track_id)))
@@ -129,6 +132,7 @@ def dashboard(track_id):
             Track: {} <br/><br/> Artist: {} <br/><br/>\
             Audio Features: <br/>{}'.format(track_name, artists, json.dumps(audio_features, indent=2).replace('\n','<br/>'))
 
+# Callback for track rate action
 @app.route('/rate', methods=['POST'])
 def rating():
     track_id = request.form['track_id']
@@ -139,6 +143,7 @@ def rating():
     else:
         track_ratings[track_id] = [rating]
 
+# Callback for track react action
 @app.route('/react', methods=['POST'])
 def react():
     track_id = request.form['track_id']
@@ -151,9 +156,13 @@ def react():
         track_reactions[track_id] = [(elapsed_ms, enum)]
 
 # Error Page
-@app.route('/error')
+@app.route('/error', methods=['GET'])
 def error():
-    return 'Error: No tracks currently playing'
+    return 'Some kind of error happened'
+
+@socketio.on('track refresh')
+def test_message(message):
+    emit('my response', {'data': message['data']})
 
 # Checks to see if token is valid and gets a new token if not
 def get_token(session):
@@ -161,9 +170,9 @@ def get_token(session):
     token_info = session.get('token_info', {})
 
     # Checking if the session already has a token stored
-    if not (session.get('token_info', False)):
-        token_valid = False
-        return token_info, token_valid
+    # if not (session.get('token_info', False)):
+    #    token_valid = False
+    #    return token_info, token_valid
 
     # Checking if token has expired
     now = int(time.time())
