@@ -14,7 +14,8 @@ html {
 }
 
 body {
-  min-height: 100vh;
+  font-family: Calibri, sans-serif;
+  min-height: 100vh;  
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -22,8 +23,29 @@ body {
   background-color: #263238;
 }
 
+.navBar{
+  display: flex;
+  background-color: black;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.navBar img {
+  height: 60px;
+  width: auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+}
+
 #reactTxt {
-  font-family: calibri;
+  font-family: Calibri, sans-serif;
   position: absolute;
   color: #9effff;
   font-weight: bold;
@@ -35,20 +57,34 @@ body {
 
 @keyframes textAnimate {
   0% {
-    bottom: 375px;
+    bottom: 35%;
     opacity: 0%;
   }
 
   50% {
-    bottom: 400px;
+    bottom: 41%;
     opacity: 100%;
     font-size: 24px;
   }
 
   100% {
-    bottom: 425px;
+    bottom: 45%;
     opacity: 0%;
   }
+}
+
+h1 {
+  padding-top: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 36px;
+}
+
+h2 {
+  /* padding-top: 10px; */
+  color: white;
+  font-weight: 100;
+  font-size: 24px;
 }
 
 table {
@@ -61,6 +97,32 @@ td {
   background-color: #4f5b62;
   transition-duration: 0.15s;
 }
+
+#elapsed {
+  align-self: flex-start;
+  margin-top: 5px;
+  height: 10px;
+  background-color: #64ffda;
+  width: 0px;
+  animation-name: growDiv;
+  animation-duration: 60s;
+  animation-timing-function: linear;
+  tr
+}
+
+@keyframes growDiv {
+  0% {
+    width: 0px;
+  }
+
+  100% {
+    width: 300px;
+  }
+}
+
+/* .passTime {
+
+} */
 
 .puke {
   background-color: red;
@@ -88,6 +150,7 @@ td {
 button {
   display: flex;
   align-items: flex-end;
+  justify-content: center;
   flex: 1;
   height: 100px;
   margin: 5px 2px;
@@ -101,6 +164,18 @@ button {
   height: 100px;
   width: 100%;
   transition-duration: 0.25s;
+}
+
+.emoj {
+  position: absolute;
+  width: 50px;
+  height: auto;
+  align-self: center;
+  margin: auto;
+}
+
+.spacer {
+  height: 50px;
 }
 
 .overlay:active {

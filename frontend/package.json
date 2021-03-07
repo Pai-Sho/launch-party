@@ -4,17 +4,18 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "latest",
-    "@material-ui/lab": "latest",
     "@material-ui/icons": "latest",
+    "@material-ui/lab": "latest",
+    "axios": "latest",
     "clsx": "latest",
     "next": "latest",
     "next-on-netlify": "latest",
+    "nextjs-redirect": "^5.0.2",
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
     "react-use": "latest",
-    "swr": "latest",
-    "axios": "latest"
+    "swr": "latest"
   },
   "scripts": {
     "dev": "next",

@@ -2,10 +2,27 @@ import axios from "axios";
 
 const BASE_URL = "http://192.168.0.2:5000";
 
-const fetcher = (url) =>
-  fetch(url, {
-    method: "GET",
-  }).then((r) => r.json());
+async function login(endpoint) {
+  try {
+    const res = await axios.get(`${BASE_URL}/`, {
+      withCredentials: true,
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function fetcher(endpoint) {
+  try {
+    const res = await axios.get(`${BASE_URL}/${endpoint}`, {
+      withCredentials: true,
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 const postTrackRating = async (track_id, rating) => {
   try {
@@ -52,4 +69,4 @@ const postReaction = async (trackID, elapsed_ms, val) => {
   }
 };
 
-export { fetcher, postTrackRating, postAlbumRating, postReaction };
+export { fetcher, postTrackRating, postAlbumRating, postReaction, login };

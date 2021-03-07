@@ -5,6 +5,19 @@
   </head>
 
   <body>
+    <div class="navBar">
+      <img src="../ui-resources/title_text-01-01.png" />
+    </div>
+    <div class="container">
+      <img
+        src="../ui-resources/album_art.jpg"
+        style="height: 300px; width: auto"
+      />
+      <div id="elapsed" class="passTime"></div>
+    </div>
+    <h1>Una Flor</h1>
+    <h2>Ozuna</h2>
+    <div class="spacer"></div>
     <table>
       <tr>
         <td></td>
@@ -325,20 +338,42 @@
     <div class="buttbar">
       <button id="puke" onclick="reaction('puke')">
         <div class="overlay"></div>
+        <img class="emoj" src="../ui-resources/emoji_vomit.png" />
       </button>
       <button id="noVibe" onclick="reaction('noVibe')">
         <div class="overlay"></div>
+        <img class="emoj" src="../ui-resources/emoji_down.png" />
       </button>
       <button id="yesVibe" onclick="reaction('yesVibe')">
         <div class="overlay"></div>
+        <img class="emoj" src="../ui-resources/emoji_up.png" />
       </button>
       <button id="fire" onclick="reaction('fire')">
         <div class="overlay"></div>
+        <img class="emoj" src="../ui-resources/emoji_fire.png" />
       </button>
     </div>
   </body>
 
   <script>
+    function genRanText() {
+      var rxnTxt = document.createElement("p");
+
+      rxnTxt.innerHTML = "SOME OTHER LISTENER REACTED";
+      rxnTxt.setAttribute("id", "reactTxt");
+      document.querySelector("body").appendChild(rxnTxt);
+      rxnTxt.style.color = "#ebebeb";
+      setTimeout(destruct, 1500);
+    }
+
+    (function loop() {
+      var rand = Math.round(Math.random() * (3000 - 500)) + 2500;
+      setTimeout(function () {
+        genRanText();
+        loop();
+      }, rand);
+    })();
+
     var bars = document.querySelectorAll("td");
 
     function reaction(emotion) {
@@ -359,7 +394,7 @@
         }, 400);
 
         // reduce remaining clicks
-        foo -= 10;
+        foo -= 20;
         console.log(foo);
         var c = document.getElementById(emotion).children;
         c[0].style.height = foo.toString() + "px";
