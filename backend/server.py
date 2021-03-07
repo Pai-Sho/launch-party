@@ -6,11 +6,14 @@ from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 
 from flask import Flask, render_template, redirect, session, request, url_for, make_response
 from flask_socketio import SocketIO, emit
+from flask_cors import CORS, cross_origin
 from db import *
 app = Flask(__name__)
-app.config['SECRET_KEY'] = secrets.token_urlsafe(16)
-app.config['DATABASE'] = 'ratings.db'
+app.config['SECRET_KEY']    = secrets.token_urlsafe(16)
+app.config['DATABASE']      = 'ratings.db'
+#app.config['CORS_HEADERS']  = 'Content-Type'
 socketio = SocketIO(app)
+CORS(app)
 
 # Flask params
 FLASK_HOST      = os.getenv('FLASK_HOST', default='192.168.0.2')
@@ -29,7 +32,7 @@ SCOPE           = 'user-read-playback-state'
 API_BASE        = 'https://api.spotify.com/v1/'
 
 # In-memory databases for track and album ratings TODO: implemnent SQL db
-track_ratings = {}
+track_ratings   = {}
 track_reactions = {}
 
 # Landing page - redirects to spotify oauth
@@ -135,47 +138,56 @@ def dashboard(track_id):
             Audio Features: <br/>{}'.format(track_name, artists, json.dumps(audio_features, indent=2).replace('\n','<br/>'))
 
 # Callback for track rate action
-@app.route('/rate', methods=['POST'])
+@app.route('/rate', methods=['POST','OPTIONS'])
 def rating():
-    track_id = request.form['track_id']
-    rating = request.form['rating']
+    if request.method == 'POST':
+        form = json.loads(request.data)
+        print(form)
+        track_id = form['data']['track_id']
+        rating = form['data']['rating']
 
-    insert_ratings(track_id,rating)
+        insert_ratings(track_id,rating)
 
-    if track_id in track_ratings.keys():
-        track_ratings[track_id].append(rating)
+        if track_id in track_ratings.keys():
+            track_ratings[track_id].append(rating)
+        else:
+            track_ratings[track_id] = [rating]
+
+        return ('', 201)
     else:
-        track_ratings[track_id] = [rating]
-
-    return ('', 200)
+        return ('', 200)
 
 # Callback for track react action
-@app.route('/react', methods=['POST'])
+@app.route('/react', methods=['POST','OPTIONS'])
 def react():
-    track_id = request.form['track_id']
-    elapsed_ms = request.form['elapsed_ms']
-    enum = request.form['enum']
+    if request.method == 'POST':
+        form = json.loads(request.data)
+        track_id = form['data']['track_id']
+        elapsed_ms = form['data']['elapsed_ms']
+        enum = form['data']['enum']
 
-    insert_reacts(track_id,elapsed_ms,enum)
+        insert_reacts(track_id,elapsed_ms,enum)
 
-    if track_id in track_reactions.keys():
-        track_reactions[track_id].append((elapsed_ms, enum))
+        if track_id in track_reactions.keys():
+            track_reactions[track_id].append((elapsed_ms, enum))
+        else:
+            track_reactions[track_id] = [(elapsed_ms, enum)]
+
+        return ('', 201)
     else:
-        track_reactions[track_id] = [(elapsed_ms, enum)]
+        return ('', 200)
 
-    return ('', 200)
-
-@app.route('/get_ratings', methods=['POST'])
+@app.route('/get_ratings', methods=['GET'])
 def get_ratings():
-    track_id = request.form['track_id']
+    track_id = request.args.get('track_id')
     ratings = query_ratings(track_id)
     return json.dumps({'track_id':track_id,'ratings':ratings})
 
-@app.route('/get_reacts', methods=['POST'])
+@app.route('/get_reacts', methods=['GET'])
 def get_reacts():
-    track_id = request.form['track_id']
+    track_id = request.args.get('track_id')
     reacts = query_reacts(track_id)
-    return return json.dumps({'track_id':track_id,'reacts':reacts})
+    return json.dumps({'track_id':track_id,'reacts':reacts})
 
 # Error Page
 @app.route('/error', methods=['GET'])
