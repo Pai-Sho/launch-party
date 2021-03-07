@@ -7,6 +7,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     padding: theme.spacing(1, 0),
   },
+  bar: {
+    background: theme.palette.background.default,
+  },
 }));
 
 export default function LinearDeterminate({ progress }) {
@@ -14,7 +17,12 @@ export default function LinearDeterminate({ progress }) {
 
   return (
     <div className={classes.root}>
-      <LinearProgress variant="determinate" value={progress} />
+      <LinearProgress
+        variant="determinate"
+        value={progress}
+        className={classes.bar}
+        color="secondary"
+      />
     </div>
   );
 }

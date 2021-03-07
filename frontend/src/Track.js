@@ -23,10 +23,15 @@ export default function Track({
   trackID,
 }) {
   const classes = useStyles();
-  const [progress, { inc: incProgress }] = useCounter(progressPerc, 100, 0);
+  const [progress, { inc: incProgress, set: setProgress }] = useCounter(
+    progressPerc,
+    100,
+    0
+  );
   const [openRatingDialog, setOpenRatingDialog] = React.useState(true);
 
   React.useEffect(() => {
+    setProgress(progressPerc);
     const timer = setInterval(() => {
       incProgress(0.1);
     }, 100);
@@ -34,7 +39,7 @@ export default function Track({
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [progressPerc]);
 
   return (
     <Container className={classes.root}>
@@ -49,8 +54,8 @@ export default function Track({
             <Image
               src={imgSrc}
               alt="Album artwork"
-              width={400}
-              height={400}
+              width={350}
+              height={350}
               className={classes.img}
             />
             <ProgressBar progress={progress > 100 ? 100 : progress} />
@@ -60,14 +65,14 @@ export default function Track({
           <Typography variant="h5" align="center">
             {name}
           </Typography>
-          <Typography variant="h6" align="center">
+          <Typography variant="h6" align="center" gutterBottom>
             {artists.join(", ")}
           </Typography>
         </Grid>
       </Grid>
       <RatingDialog
         name={name}
-        open={openRatingDialog && progress > 60}
+        open={openRatingDialog && progress > 70}
         setOpen={setOpenRatingDialog}
         trackID={trackID}
       />

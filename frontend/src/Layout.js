@@ -1,6 +1,5 @@
-import { AppBar, Container, makeStyles } from "@material-ui/core";
+import { AppBar, Container, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
-import LinkTypography from "./Link";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -8,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     minHeight: "100vh",
-    backgroundColor: theme.palette.grey[300],
+    backgroundColor: theme.palette.background.default,
   },
   container: {
     flexGrow: 1,
@@ -30,12 +29,9 @@ const Layout = ({ children }) => {
   return (
     <div className={classes.root}>
       <AppBar className={classes.bar} position="static">
-        <LinkTypography
-          href="/"
-          typographyProps={{ variant: "h4", align: "center" }}
-        >
-          Launch Party
-        </LinkTypography>
+        <Typography variant="h1" align="center">
+          LAUNCH PARTY
+        </Typography>
       </AppBar>
       <Container maxWidth="sm" className={classes.container}>
         {children}
