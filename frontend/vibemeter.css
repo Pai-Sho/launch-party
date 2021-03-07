@@ -57,18 +57,18 @@ body {
 
 @keyframes textAnimate {
   0% {
-    bottom: 350px;
+    bottom: 35%;
     opacity: 0%;
   }
 
   50% {
-    bottom: 380px;
+    bottom: 41%;
     opacity: 100%;
     font-size: 24px;
   }
 
   100% {
-    bottom: 425px;
+    bottom: 45%;
     opacity: 0%;
   }
 }
