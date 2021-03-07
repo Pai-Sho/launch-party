@@ -19,6 +19,36 @@ body {
   flex-direction: column;
   justify-content: end;
   align-items: center;
+  background-color: #263238;
+}
+
+#reactTxt {
+  font-family: calibri;
+  position: absolute;
+  color: #9effff;
+  font-weight: bold;
+  font-size: 18px;
+  z-index: -10;
+  animation-name: textAnimate;
+  animation-duration: 1.5s;
+}
+
+@keyframes textAnimate {
+  0% {
+    bottom: 375px;
+    opacity: 0%;
+  }
+
+  50% {
+    bottom: 400px;
+    opacity: 100%;
+    font-size: 24px;
+  }
+
+  100% {
+    bottom: 425px;
+    opacity: 0%;
+  }
 }
 
 table {
@@ -33,21 +63,46 @@ td {
 }
 
 .puke {
-  background-color: lightsalmon;
+  background-color: red;
+}
+
+.noVibe {
+  background-color: salmon;
+}
+
+.yesVibe {
+  background-color: rgb(57, 200, 116);
+}
+
+.fire {
+  background-color: greenyellow;
 }
 
 .buttbar {
   height: 100px;
   width: 50vw;
   display: flex;
+  margin-bottom: 20px;
 }
 
 button {
+  display: flex;
+  align-items: flex-end;
   flex: 1;
-  margin: 5px;
-  background-color: khaki;
+  height: 100px;
+  margin: 5px 2px;
+  /* background-color: #4f5b62; */
+  border: solid 1px #4f5b62;
 }
 
-button:active {
-  background-color: lightcoral;
+.overlay {
+  pointer-events: none;
+  background-color: #14cba8;
+  height: 100px;
+  width: 100%;
+  transition-duration: 0.25s;
+}
+
+.overlay:active {
+  background-color: salmon;
 }
