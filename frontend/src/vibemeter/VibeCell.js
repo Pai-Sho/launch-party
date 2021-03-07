@@ -4,9 +4,10 @@ const useStyles = makeStyles({
   root: {
     backgroundColor: (props) => props.color,
     margin: "2px",
-    height: "2ch",
+    height: "1ch",
     width: "4ch",
     maxWidth: "4ch",
+    transitionDuration: "0.5s",
   },
 });
 

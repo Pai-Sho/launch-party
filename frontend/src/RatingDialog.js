@@ -3,7 +3,6 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
   Grid,
   makeStyles,
   Slide,
@@ -49,7 +48,6 @@ export default function RatingDialog({ name, open, setOpen, trackID }) {
       aria-labelledby="dialog-title"
       aria-describedby="dialog-description"
     >
-      <DialogTitle id="dialog-title">First impressions</DialogTitle>
       <DialogContent>
         <DialogContentText id="dialog-description" className={classes.txt}>
           Pick a rating for {name ? name : "this track"}.
