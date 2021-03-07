@@ -49,7 +49,7 @@ def login():
 
     return redirect(auth_url)
 
-# Stores user authentication info for session
+# Stores user auth tokens for session
 @app.route('/auth_callback')
 def auth_callback():
     sp_oauth = SpotifyOAuth(client_id = CLIENT_ID,
@@ -71,13 +71,8 @@ def auth_callback():
     response = make_response(redirect('get_current_track_info'))
     response.set_cookie('user_name',user_name)
     response.set_cookie('user_profile_url',user_profile_url)
-    print(response)
 
     return response
-
-@socketio.on('track refresh')
-def test_message(message):
-    emit('my response', {'data': message['data']})
 
 # Queries Spotify Web API to get user's currently playing track info
 # Redirects to track-specific dashboard/chat room
@@ -137,6 +132,7 @@ def dashboard(track_id):
             Track: {} <br/><br/> Artist: {} <br/><br/>\
             Audio Features: <br/>{}'.format(track_name, artists, json.dumps(audio_features, indent=2).replace('\n','<br/>'))
 
+# Callback for track rate action
 @app.route('/rate', methods=['POST'])
 def rating():
     track_id = request.form['track_id']
@@ -147,6 +143,7 @@ def rating():
     else:
         track_ratings[track_id] = [rating]
 
+# Callback for track react action
 @app.route('/react', methods=['POST'])
 def react():
     track_id = request.form['track_id']
@@ -162,6 +159,10 @@ def react():
 @app.route('/error', methods=['GET'])
 def error():
     return 'Some kind of error happened'
+
+@socketio.on('track refresh')
+def test_message(message):
+    emit('my response', {'data': message['data']})
 
 # Checks to see if token is valid and gets a new token if not
 def get_token(session):
