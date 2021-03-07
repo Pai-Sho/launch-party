@@ -1,0 +1,53 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+  cursor: default;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+}
+
+table {
+  width: 50vw;
+  height: 30vh;
+}
+
+td {
+  margin: 2px;
+  background-color: #4f5b62;
+  transition-duration: 0.15s;
+}
+
+.puke {
+  background-color: lightsalmon;
+}
+
+.buttbar {
+  height: 100px;
+  width: 50vw;
+  display: flex;
+}
+
+button {
+  flex: 1;
+  margin: 5px;
+  background-color: khaki;
+}
+
+button:active {
+  background-color: lightcoral;
+}
