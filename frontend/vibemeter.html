@@ -323,28 +323,83 @@
     </table>
 
     <div class="buttbar">
-      <button onclick="pukify()"></button>
-      <button></button>
-      <button></button>
-      <button></button>
+      <button id="puke" onclick="reaction('puke')">
+        <div class="overlay"></div>
+      </button>
+      <button id="noVibe" onclick="reaction('noVibe')">
+        <div class="overlay"></div>
+      </button>
+      <button id="yesVibe" onclick="reaction('yesVibe')">
+        <div class="overlay"></div>
+      </button>
+      <button id="fire" onclick="reaction('fire')">
+        <div class="overlay"></div>
+      </button>
     </div>
   </body>
 
   <script>
     var bars = document.querySelectorAll("td");
 
-    function pukify() {
-      console.log(this);
-      for (i = 0; i < bars.length; i++) {
-        bars[i].classList.add("puke");
+    function reaction(emotion) {
+      var overlay = document.getElementById(emotion).children[0];
+      var ovStyle = window.getComputedStyle(overlay);
+      var foo = ovStyle.getPropertyValue("height");
+      foo = foo.toString().replace("px", "");
+      foo = parseInt(foo);
+
+      if (foo > 0) {
+        generateText(emotion);
+        //change bar colors
+        for (i = 0; i < bars.length; i++) {
+          bars[i].classList.add(emotion);
+        }
+        setTimeout(function () {
+          dereact(emotion);
+        }, 400);
+
+        // reduce remaining clicks
+        foo -= 10;
+        console.log(foo);
+        var c = document.getElementById(emotion).children;
+        c[0].style.height = foo.toString() + "px";
+      } else {
+        document.getElementById(emotion).removeAttribute("onClick");
       }
-      setTimeout(dePuke, 300);
     }
 
-    function dePuke() {
+    function dereact(emotion) {
       for (i = 0; i < bars.length; i++) {
-        bars[i].classList.remove("puke");
+        bars[i].classList.remove(emotion);
       }
+    }
+
+    function generateText(emotion) {
+      var rxnTxt = document.createElement("p");
+      console.log("generating text...");
+      console.log(emotion);
+      switch (emotion) {
+        case "puke":
+          rxnTxt.innerHTML = "YOU'RE DISGUSTED";
+          break;
+        case "noVibe":
+          rxnTxt.innerHTML = "YOU'RE NOT VIBING";
+          break;
+        case "yesVibe":
+          rxnTxt.innerHTML = "YOU'RE VIBING";
+          break;
+        case "fire":
+          rxnTxt.innerHTML = "YOU'RE FEELING THE FIRE";
+          break;
+      }
+      rxnTxt.setAttribute("id", "reactTxt");
+      document.querySelector("body").appendChild(rxnTxt);
+
+      setTimeout(destruct, 1500);
+    }
+
+    function destruct() {
+      document.getElementById("reactTxt").remove();
     }
   </script>
 </html>
