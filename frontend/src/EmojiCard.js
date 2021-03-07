@@ -15,12 +15,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EmojiCard() {
+export default function EmojiCard({ trackID, elapsed }) {
   const classes = useStyles();
 
   const EmojiButton = ({ emoji, val }) => (
     <Grid item>
-      <Button className={classes.button} onClick={() => postReaction(val)}>
+      <Button
+        className={classes.button}
+        onClick={() => postReaction(trackID, elapsed, val)}
+      >
         {emoji}
       </Button>
     </Grid>
