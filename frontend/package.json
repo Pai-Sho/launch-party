@@ -1,0 +1,25 @@
+{
+  "name": "launchparty",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "latest",
+    "@material-ui/lab": "latest",
+    "@material-ui/icons": "latest",
+    "clsx": "latest",
+    "next": "latest",
+    "next-on-netlify": "latest",
+    "prop-types": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-use": "latest",
+    "swr": "latest",
+    "axios": "latest"
+  },
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "postbuild": "next-on-netlify"
+  }
+}
