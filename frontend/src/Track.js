@@ -1,6 +1,7 @@
 import { Container, Grid, makeStyles, Typography } from "@material-ui/core";
 import Image from "next/image";
 import React from "react";
+import { useCounter } from "react-use";
 import ProgressBar from "./ProgressBar";
 import RatingDialog from "./RatingDialog";
 
@@ -13,14 +14,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Track({ name, album, artists, imgSrc, progressPerc }) {
+export default function Track({
+  name,
+  album,
+  artists,
+  imgSrc,
+  progressPerc,
+  trackID,
+}) {
   const classes = useStyles();
-  const [progress, setProgress] = React.useState(progressPerc);
+  const [progress, { inc: incProgress }] = useCounter(progressPerc, 100, 0);
   const [openRatingDialog, setOpenRatingDialog] = React.useState(true);
 
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setProgress((oldProgress) => oldProgress + 0.1);
+      incProgress(0.1);
     }, 100);
 
     return () => {
@@ -59,8 +67,9 @@ export default function Track({ name, album, artists, imgSrc, progressPerc }) {
       </Grid>
       <RatingDialog
         name={name}
-        open={openRatingDialog && progress > 65}
+        open={openRatingDialog && progress > 60}
         setOpen={setOpenRatingDialog}
+        trackID={trackID}
       />
     </Container>
   );

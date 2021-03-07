@@ -1,13 +1,24 @@
 import axios from "axios";
 
+const BASE_URL = "http://192.168.0.2:5000";
+
 const fetcher = (url) =>
   fetch(url, {
     method: "GET",
   }).then((r) => r.json());
 
-const postTrackRating = async (rating) => {
+const postTrackRating = async (track_id, rating) => {
   try {
-    const res = await axios.post("/replace/with", rating);
+    console.log(rating);
+    const res = await axios.post(`${BASE_URL}/rate`, {
+      data: {
+        track_id,
+        rating,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     console.log(res.data);
   } catch (err) {
     console.error(err);
@@ -23,9 +34,18 @@ const postAlbumRating = async (rating) => {
   }
 };
 
-const postReaction = async (text) => {
+const postReaction = async (trackID, elapsed_ms, val) => {
   try {
-    const res = await axios.post("/replace/with", text);
+    const res = await axios.post(`${BASE_URL}/react`, {
+      data: {
+        track_id: trackID,
+        elapsed_ms,
+        enum: val,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     console.log(res.data);
   } catch (err) {
     console.error(err);

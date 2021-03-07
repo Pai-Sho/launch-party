@@ -28,7 +28,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function RatingDialog({ name, open, setOpen }) {
+export default function RatingDialog({ name, open, setOpen, trackID }) {
   const [value, setValue] = React.useState(0);
 
   const classes = useStyles();
@@ -63,7 +63,7 @@ export default function RatingDialog({ name, open, setOpen }) {
             value={value}
             onChange={(event, newValue) => {
               setValue(newValue);
-              postTrackRating(newValue);
+              postTrackRating(trackID, newValue);
               setOpen(false);
             }}
           />

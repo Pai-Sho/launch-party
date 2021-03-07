@@ -6,6 +6,7 @@ import EmojiCard from "../src/EmojiCard";
 import Layout from "../src/Layout";
 import { placeHolderData } from "../src/services/Context";
 import Track from "../src/Track";
+import Vibemeter from "../src/vibemeter/Vibemeter";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -28,6 +29,7 @@ export default function Index() {
   // console.log(data.images[0].url);
 
   const {
+    track_id,
     track_name,
     album_name,
     artists,
@@ -54,10 +56,14 @@ export default function Index() {
             artists={artists}
             imgSrc={artwork}
             progressPerc={progressPerc}
+            trackID={track_id}
           />
         </Grid>
         <Grid item>
-          <EmojiCard />
+          <Vibemeter />
+        </Grid>
+        <Grid item>
+          <EmojiCard trackID={track_id} elapsed={progress_ms} />
         </Grid>
       </Grid>
     </Layout>
