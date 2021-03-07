@@ -6,8 +6,10 @@ from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 
 from flask import Flask, render_template, redirect, session, request, url_for, make_response
 from flask_socketio import SocketIO, emit
+from db import *
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_urlsafe(16)
+app.config['DATABASE'] = 'ratings.db'
 socketio = SocketIO(app)
 
 # Flask params
@@ -138,10 +140,14 @@ def rating():
     track_id = request.form['track_id']
     rating = request.form['rating']
 
+    insert_ratings(track_id,rating)
+
     if track_id in track_ratings.keys():
         track_ratings[track_id].append(rating)
     else:
         track_ratings[track_id] = [rating]
+
+    return ('', 200)
 
 # Callback for track react action
 @app.route('/react', methods=['POST'])
@@ -150,10 +156,26 @@ def react():
     elapsed_ms = request.form['elapsed_ms']
     enum = request.form['enum']
 
+    insert_reacts(track_id,elapsed_ms,enum)
+
     if track_id in track_reactions.keys():
         track_reactions[track_id].append((elapsed_ms, enum))
     else:
         track_reactions[track_id] = [(elapsed_ms, enum)]
+
+    return ('', 200)
+
+@app.route('/get_ratings', methods=['POST'])
+def get_ratings():
+    track_id = request.form['track_id']
+    ratings = query_ratings(track_id)
+    return json.dumps({'track_id':track_id,'ratings':ratings})
+
+@app.route('/get_reacts', methods=['POST'])
+def get_reacts():
+    track_id = request.form['track_id']
+    reacts = query_reacts(track_id)
+    return return json.dumps({'track_id':track_id,'reacts':reacts})
 
 # Error Page
 @app.route('/error', methods=['GET'])
