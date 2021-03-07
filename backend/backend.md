@@ -1,3 +1,15 @@
+# Auth flow
+
+### Step 1:
+Send `GET` request to `/login` endpoint with a `username` parameter defined (Grab this from a form on the landing page)
+Example: `{BASE_URL}/login?username=Pai-Sho`
+
+### Step 2:
+User will be redirected to spotify login page
+
+### Step 3:
+Automatically redirects to `/get_current_user_track` endpoint
+
 # Endpoints
 
 ## `/get_user_current_track`
